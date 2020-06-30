@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.akash.springbootjpa.dao.AlienRepo;
@@ -33,6 +36,9 @@ public class AlienController {
 	@RequestMapping("/getAlien")
 	public ModelAndView getAlien(@RequestParam() int aid)
 	{
+		System.out.println(repo.findByTech("C"));
+		System.out.println(repo.findByAidGreaterThan(102));
+		System.out.println(repo.findByTechSorted("Java"));
 		ModelAndView mv = new ModelAndView("showAlien.jsp");
 		Alien alien = repo.findById(aid).orElse(new Alien());
 		mv.addObject(alien);
@@ -77,5 +83,29 @@ public class AlienController {
 		}
 		mv.addObject("listOfAliens", aliens);
 		return mv;
+	}
+	
+	//Rest API format URL - http://localhost:9999/aliens
+	@RequestMapping("/aliens")
+	@ResponseBody	//Only returing data not a view
+	public String getAliens()
+	{
+		return repo.findAll().toString();
+	}
+	
+	//Rest API format URL - http://localhost:9999/aliens/102
+	@RequestMapping("/alien/102")
+	@ResponseBody	//Only returing data not a view
+	public String getAlien102()
+	{
+		return repo.findById(102).toString();
+	}
+	
+	//Rest API format URL - http://localhost:9999/aliens/anyid
+	@RequestMapping("/alien/{aid}")
+	@ResponseBody	//Only returing data not a view
+	public String getAlienByAid(@PathVariable("aid") int aid)
+	{
+		return repo.findById(aid).toString();
 	}
 }
