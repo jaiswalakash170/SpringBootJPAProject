@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -26,6 +28,21 @@ public class AlienController {
 	public String home()
 	{
 		return "home.jsp";
+	}
+	
+	@DeleteMapping("/alien/{aid}")
+	public String deleteAlienAPI(@PathVariable int aid)
+	{
+		Alien a = repo.getOne(aid);
+		repo.delete(a);
+		return "Deleted";
+	}
+	
+	@PutMapping(path="/alien", consumes={"application/json"})
+	public Alien updateAlienAPI(@RequestBody Alien alien)
+	{
+		repo.save(alien);
+		return alien;
 	}
 	
 	@PostMapping(path="/postAlien", consumes={"application/json"})
