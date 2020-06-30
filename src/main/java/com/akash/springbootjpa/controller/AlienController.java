@@ -5,17 +5,18 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.akash.springbootjpa.dao.AlienRepo;
 import com.akash.springbootjpa.model.Alien;
 
-@Controller
+@RestController
 public class AlienController {
 	
 	@Autowired
@@ -25,6 +26,13 @@ public class AlienController {
 	public String home()
 	{
 		return "home.jsp";
+	}
+	
+	@PostMapping(path="/postAlien", consumes={"application/json"})
+	public Alien postAlien(@RequestBody Alien alien) //RequestBody added to accept raw data from the client
+	{
+		repo.save(alien);
+		return alien;
 	}
 	
 	@RequestMapping("/addAlien")
@@ -85,7 +93,6 @@ public class AlienController {
 	
 	//Rest API format URL - http://localhost:9999/aliens
 	@RequestMapping(path="/aliens" , produces={"application/xml"})
-	@ResponseBody	//Only returing data not a view
 	public List<Alien> getAliens()
 	{
 		return repo.findAll();
@@ -93,7 +100,6 @@ public class AlienController {
 	
 	//Rest API format URL - http://localhost:9999/aliens/102
 	@RequestMapping("/alien/102")
-	@ResponseBody	//Only returing data not a view
 	public String getAlien102()
 	{
 		return repo.findById(102).toString();
@@ -101,7 +107,6 @@ public class AlienController {
 	
 	//Rest API format URL - http://localhost:9999/aliens/anyid
 	@RequestMapping("/alien/{aid}")
-	@ResponseBody	//Only returing data not a view
 	public Optional<Alien> getAlienByAid(@PathVariable("aid") int aid)
 	{
 		return repo.findById(aid);
