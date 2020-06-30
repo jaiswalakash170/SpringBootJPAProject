@@ -1,6 +1,8 @@
 package com.akash.springbootjpa.controller;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -35,9 +37,6 @@ public class AlienController {
 	@RequestMapping("/getAlien")
 	public ModelAndView getAlien(@RequestParam() int aid)
 	{
-		System.out.println(repo.findByTech("C"));
-		System.out.println(repo.findByAidGreaterThan(102));
-		System.out.println(repo.findByTechSorted("Java"));
 		ModelAndView mv = new ModelAndView("showAlien.jsp");
 		Alien alien = repo.findById(aid).orElse(new Alien());
 		mv.addObject(alien);
@@ -87,9 +86,9 @@ public class AlienController {
 	//Rest API format URL - http://localhost:9999/aliens
 	@RequestMapping("/aliens")
 	@ResponseBody	//Only returing data not a view
-	public String getAliens()
+	public List<Alien> getAliens()
 	{
-		return repo.findAll().toString();
+		return repo.findAll();
 	}
 	
 	//Rest API format URL - http://localhost:9999/aliens/102
@@ -103,8 +102,8 @@ public class AlienController {
 	//Rest API format URL - http://localhost:9999/aliens/anyid
 	@RequestMapping("/alien/{aid}")
 	@ResponseBody	//Only returing data not a view
-	public String getAlienByAid(@PathVariable("aid") int aid)
+	public Optional<Alien> getAlienByAid(@PathVariable("aid") int aid)
 	{
-		return repo.findById(aid).toString();
+		return repo.findById(aid);
 	}
 }
