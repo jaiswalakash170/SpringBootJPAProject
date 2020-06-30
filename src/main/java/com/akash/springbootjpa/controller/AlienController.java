@@ -84,7 +84,7 @@ public class AlienController {
 	}
 	
 	//Rest API format URL - http://localhost:9999/aliens
-	@RequestMapping("/aliens")
+	@RequestMapping(path="/aliens" , produces={"application/xml"})
 	@ResponseBody	//Only returing data not a view
 	public List<Alien> getAliens()
 	{
